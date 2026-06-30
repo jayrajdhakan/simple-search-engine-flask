@@ -1,0 +1,83 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <title>Search Engine</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+</head>
+
+<body>
+
+    <div class="home-container">
+
+        <h1 class="logo">SearchX</h1>
+        <!-- <p class="tagline">Search anything instantly</p> -->
+
+        <form method="POST" class="search-box">
+            <input type="text" name="query" placeholder="Search the web..." required>
+            <button type="submit">Search</button>
+        </form>
+
+        <div id="loader">
+            <div class="ai-loader">
+                <div class="ring"></div>
+            <div class="dot"></div>
+            </div>
+
+            <p id="loading-text">Searching</p>
+        </div>
+
+    </div>
+    <script>
+        document.addEventListener("DOMContentLoaded", () => {
+            const form = document.querySelector("form");
+            const loader = document.getElementById("loader");
+
+            if (form && loader) {
+                form.addEventListener("submit", (e) => {
+                    e.preventDefault();
+
+                    loader.classList.add("active");
+
+                    setTimeout(() => {
+                        form.submit();
+                    }, 400);
+                });
+            }
+
+            window.addEventListener("load", () => {
+                if (loader) {
+                    loader.classList.remove("active");
+                }
+            });
+
+            const text = document.getElementById("loading-text");
+
+            const words = [
+                "Analyzing results",
+            ];
+
+            let i = 0;
+            let dotCount = 0;
+
+            setInterval(() => {
+                if (text) {
+                    text.textContent = words[i];
+                    i = (i + 1) % words.length;
+                }
+            }, 1200);
+
+            // Animate dots every 400ms
+            setInterval(() => {
+                if (text) {
+                    const base = text.textContent.replace(/\.+$/, "");
+                    dotCount = (dotCount % 3) + 1;
+                    text.textContent = base + ".".repeat(dotCount);
+                }
+            }, 400);
+        });
+    </script>
+
+</body>
+
+</html>

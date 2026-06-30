@@ -1,0 +1,98 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <title>Results</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+</head>
+
+<body>
+
+    <!-- Search bar -->
+    <div class="top-bar">
+        <form method="POST" action="/" class="search-box small">
+            <input type="text" name="query" value="{{ query }}" required>
+            <button type="submit">Search</button>
+        </form>
+    </div>
+
+    <div class="container">
+
+        <h2 class="result-title">Results for "{{ query }}"</h2>
+
+        <!--  SMART RESULT -->
+        {% if is_calc %}
+        <div class="card">
+            <h1 style="font-size:50px; color:#38bdf8; text-align:center;">
+                {{ calc_result }}
+            </h1>
+        </div>
+        <!-- 📏 UNIT RESULT -->
+          {% elif is_unit %} 
+          <div class="card">
+            <h1 style="font-size:50px; color:#38bdf8; text-align:center;"> {{ unit_result }} </h1>
+            <p class="link" style="text-align:center;">Converted Value</p>
+        </div> 
+        <!-- CURRENCY RESULT -->
+        {% elif is_currency %} 
+        <div class="card">
+            <h2 style="text-align:center;"> {{ currency.amount }} {{ currency.from }} → {{ currency.to }} </h2>
+            <p style="text-align:center;">Live conversion coming soon </p>
+        </div>
+
+        <!--  NORMAL SEARCH -->
+        {% elif results %}
+        {% for result in results %}
+        <div class="card">
+            <a href="{{ result.link }}" target="_blank">
+                <h3>{{ result.title }}</h3>
+            </a>
+
+            <p class="link">{{ result.link }}</p>
+            <p class="desc">{{ result.desc }}</p>
+        </div>
+        {% endfor %}
+
+        {% else %}
+        <p>No results found </p>
+        {% endif %}
+
+    </div>
+
+    <!--  Loader -->
+    <div id="loader">
+        <div class="ai-loader">
+            <div class="ring"></div>
+        </div>
+        <div class="dot"></div>
+
+        <p id="loading-text">
+            Analyzing results<span class="dots"></span>
+        </p>
+    </div>
+
+    <script>
+        document.addEventListener("DOMContentLoaded", () => {
+            const form = document.querySelector("form");
+            const loader = document.getElementById("loader");
+
+            if (form && loader) {
+                form.addEventListener("submit", (e) => {
+                    e.preventDefault();
+                    loader.classList.add("active");
+
+                    setTimeout(() => {
+                        form.submit();
+                    }, 400);
+                });
+            }
+
+            window.addEventListener("load", () => {
+                loader.classList.remove("active");
+            });
+        });
+    </script>
+
+</body>
+
+</html>
